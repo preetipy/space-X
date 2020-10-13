@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SpaceX list</title>
+    <div class="page-header"><b>SpaceX Launch Programs</b></div>
+</head>
+<body class="backgroundColor">
+    <div class="mainFrame">
+        <div class="filter"><b>Filters</b>
+            <div>
+                <p class="filterType">Launch Year</p>
+                <hr class="line"></hr>
+                <div id="filterByYears" class="filterButtons"></div>
+            </div>
+            <div>
+                <p class="filterType">Successful launch</p>
+                <hr class="line"></hr>
+                <div id="launch" class="filterButtons">
+                    <button class="button" onclick="spaceXProgram.launchLandFilterFn('launch', 'true')">True</button>
+                    <button class="button" onclick="spaceXProgram.launchLandFilterFn('launch', 'false')">False</button>
+                </div>
+            </div>
+            <div>
+                <p class="filterType">Successful landing</p>
+                <hr class="line"></hr>
+                <div id="landing" class="filterButtons">
+                    <button class="button" onclick="spaceXProgram.launchLandFilterFn('landing', 'true')">True</button>
+                    <button class="button" onclick="spaceXProgram.launchLandFilterFn('landing', 'false')">False</button>
+                </div>
+            </div>
+        </div>
+        <div class="dataCardHolder"></div>
+    </div>
+</body>
+</html>
+<script>
+    let spaceXProgram = new dashboardData();
+    spaceXProgram.renderDashboardPage();
+</script>
