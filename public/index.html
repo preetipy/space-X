@@ -9,8 +9,8 @@
     <title>SpaceX list</title>
     <div class="page-header"><b>SpaceX Launch Programs</b></div>
 </head>
-<body class="backgroundColor">
-    <div class="mainFrame">
+<body id="body" class="backgroundColor">
+    <div  class="mainFrame">
         <div class="filter"><b>Filters</b>
             <div>
                 <p class="filterType">Launch Year</p>
@@ -39,6 +39,15 @@
 </body>
 </html>
 <script>
+    document.onreadystatechange = function() { 
+            if (document.readyState !== "complete") { 
+                document.querySelector( 
+                  "body").style.visibility = "hidden"; 
+            } else { 
+                document.querySelector( 
+                  "body").style.visibility = "visible"; 
+            } 
+    }; 
     let spaceXProgram = new dashboardData();
     spaceXProgram.renderDashboardPage();
 </script>
