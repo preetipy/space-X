@@ -34,6 +34,7 @@ body {
     padding: 10px;
     background-color: #f1f1f1;
     height: 100%;
+    align-items: center;  
   }
 
   .filterButtons:after{
@@ -43,14 +44,21 @@ body {
   }
   .button, .yearBtn {
     float: left;
-    width: 30%;
+    width: 40%;
     padding: 10px;
-    margin-left: 10%;
-    margin-right: 10%;
+    margin-left: 5%;
     margin-top: 5px;
-    background-color: #b0f5b0;
+    background-color: #85e48591;
     border-radius: 5px;
     cursor: pointer;
+    border: none;
+    height: 4vh;
+    font-size: x-small;
+    font-weight: bold;
+    padding-bottom: 10%;
+    text-align: center;
+    vertical-align: middle;
+    outline: none;
   }
 
   .filterType {
