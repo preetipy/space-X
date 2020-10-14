@@ -89,9 +89,6 @@ class dashboardData {
       let element = document.getElementById(year);
       let btnBgColor = window.getComputedStyle(element).backgroundColor;
       (!this.isPageReload) ? this.revertbackgroundColorChange() : this.setColor(element);
-      console.log(element);
-      console.log(btnBgColor);
-
       if (btnBgColor === 'rgba(133, 228, 133, 0.57)') {
         element.style.backgroundColor = "#3da03d91";
         let year = element.textContent.trim();
