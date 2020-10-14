@@ -84,11 +84,14 @@ class dashboardData {
     filterBasedOnYears(year) {
        // if its a page reload, then retain the filters and background color change for selected filters
       // if a new filter is selected , remove the color change of previously selected filter.
-      (!this.isPageReload) ? this.revertbackgroundColorChange() : '';
-
       // get the element.
+     
       let element = document.getElementById(year);
       let btnBgColor = window.getComputedStyle(element).backgroundColor;
+      (!this.isPageReload) ? this.revertbackgroundColorChange() : this.setColor(element);
+      console.log(element);
+      console.log(btnBgColor);
+
       if (btnBgColor === 'rgba(133, 228, 133, 0.57)') {
         element.style.backgroundColor = "#3da03d91";
         let year = element.textContent.trim();
@@ -105,7 +108,9 @@ class dashboardData {
         element.style.backgroundColor =  "#85e48591";
         this.renderInfoCards(this.baseUrl);
         sessionStorage.removeItem(this.filterApplied);
+        (!this.isPageReload) ? this.revertbackgroundColorChange() : '';
       }
+      // (!this.isPageReload) ? this.revertbackgroundColorChange() : '';
       this.isPageReload = false;
     }
 
@@ -115,14 +120,13 @@ class dashboardData {
       // if its a page reload, then retain the filters and background color change for selected filters
       // if a new filter is selected , remove the color change of previously selected filter.
 
-      (!this.isPageReload) ? this.revertbackgroundColorChange() : '';
-
       let elementid = value.concat(type);
       let element = document.getElementById(elementid);
       let btnBgColor = window.getComputedStyle(element).backgroundColor;
 
+      (!this.isPageReload) ? this.revertbackgroundColorChange() : this.setColor(element);
+
       if(btnBgColor === 'rgba(133, 228, 133, 0.57)') {
-        document.getElementsByClassName("button").disabled = true;
 
         //background color change after click of button
         element.style.backgroundColor = "#3da03d91";
@@ -138,6 +142,7 @@ class dashboardData {
         this.renderInfoCards(this.baseUrl);
         sessionStorage.removeItem(this.filterApplied);
         document.getElementsByClassName("button").disabled = false;
+        (!this.isPageReload) ? this.revertbackgroundColorChange() : '';
       }
       this.isPageReload = false;
     }
@@ -149,5 +154,8 @@ class dashboardData {
         let element = document.getElementById(elementid);
         element.style.backgroundColor =  "#85e48591";
       }
+    }
+    setColor(element) {
+      element.style.backgroundColor = '#3da03d91';
     }
   }
