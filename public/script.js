@@ -3,12 +3,20 @@ class dashboardData {
       this.baseUrl = "https://api.spacexdata.com/v3/launches?limit=100";
       this.spaceProgramData = [];
       this.yearList = [];
+      this.filterApplied = 'filtersApplied';
+      this.isPageReload = false;
     }
   
     // function to render dashboard
     async renderDashboardPage () {
       await this.renderInfoCards(this.baseUrl);
       this.renderYearListForFilter();
+      if(sessionStorage.getItem(this.filterApplied)){
+        let filter = JSON.parse(sessionStorage.getItem(this.filterApplied));
+        this.isPageReload = true;
+        filter.type === "year" ? this.filterBasedOnYears(filter.value, this.isPageReload) 
+                               : this.launchLandFilterFn(filter.type, filter.value, this.isPageReload);
+      }
     }
   
   
@@ -58,29 +66,88 @@ class dashboardData {
   
     // Below function is to provide the years for filtering the data.
     renderYearListForFilter() {
-      let filtershtml = ''
       this.yearList.forEach((year) => {
-        let filterYear = `<button class="yearBtn">${year}</button>`;
-        filtershtml += filterYear;
-        let container = document.getElementById('filterByYears');
-        container.innerHTML = filtershtml;
-      });
-      let buttonList = document.getElementById('filterByYears');
-      buttonList.addEventListener("click", this.filterBasedOnYears.bind(this));
+        var element = document.createElement("button");
+        element.type = 'button';
+        element.className = "button";
+        element.value = year;
+        element.id = year;
+        element.textContent = year;
+        element.addEventListener("click", this.filterBasedOnYears.bind(this, year));
+        let htmlpage = document.getElementById("filterByYears");
+        //Append the element in page 
+        htmlpage.appendChild(element);
+    });
     }
   
     // action handler function for filtering data based on year value selected.
-    filterBasedOnYears(event) {
-      let year = event.srcElement.innerHTML.trim();
-      const filterUrl = `${this.baseUrl}&launch_success=true&land_success=true&launch_year=${year}`;
-      this.renderInfoCards(filterUrl);
+    filterBasedOnYears(year) {
+       // if its a page reload, then retain the filters and background color change for selected filters
+      // if a new filter is selected , remove the color change of previously selected filter.
+      (!this.isPageReload) ? this.revertbackgroundColorChange() : '';
+
+      // get the element.
+      let element = document.getElementById(year);
+      let btnBgColor = window.getComputedStyle(element).backgroundColor;
+      if (btnBgColor === 'rgba(133, 228, 133, 0.57)') {
+        element.style.backgroundColor = "#3da03d91";
+        let year = element.textContent.trim();
+
+        //generate filter url
+        const filter = `&launch_success=true&land_success=true&launch_year=${year}`;
+        this.renderInfoCards(`${this.baseUrl}${filter}`);
+
+        //store the filter in session storage
+        sessionStorage.setItem(this.filterApplied, JSON.stringify({"type": "year", "value": year}));
+      } else {
+        // once the filter is removed, by clicking again the same selected button(like toggle button)
+        // remove the session storage info and change back the background color
+        element.style.backgroundColor =  "#85e48591";
+        this.renderInfoCards(this.baseUrl);
+        sessionStorage.removeItem(this.filterApplied);
+      }
+      this.isPageReload = false;
     }
-    
+
     // This is a common function to handle filtering of data for launch and land success and failure.
   
     launchLandFilterFn(type, value) {
-      const filter = (type === 'launch') ? '&launch_success=' : '&launch_success=true&land_success='
-      const filterUrl = `${this.baseUrl}${filter}${value}`;
-      this.renderInfoCards(filterUrl);
+      // if its a page reload, then retain the filters and background color change for selected filters
+      // if a new filter is selected , remove the color change of previously selected filter.
+
+      (!this.isPageReload) ? this.revertbackgroundColorChange() : '';
+
+      let elementid = value.concat(type);
+      let element = document.getElementById(elementid);
+      let btnBgColor = window.getComputedStyle(element).backgroundColor;
+
+      if(btnBgColor === 'rgba(133, 228, 133, 0.57)') {
+        document.getElementsByClassName("button").disabled = true;
+
+        //background color change after click of button
+        element.style.backgroundColor = "#3da03d91";
+
+        //generating filter url
+        const filter = (type === 'Launch') ? '&launch_success=' : '&launch_success=true&land_success='
+        const filterUrl = `${this.baseUrl}${filter}${value}`;
+        this.renderInfoCards(filterUrl);
+        // storage the filter in session storage.
+        window.sessionStorage.setItem(this.filterApplied, JSON.stringify({"type": type, "value": value}));
+      } else{
+        element.style.backgroundColor = "#85e48591";
+        this.renderInfoCards(this.baseUrl);
+        sessionStorage.removeItem(this.filterApplied);
+        document.getElementsByClassName("button").disabled = false;
+      }
+      this.isPageReload = false;
+    }
+
+    revertbackgroundColorChange(){
+      let prevFilter = JSON.parse(sessionStorage.getItem(this.filterApplied));
+      if(prevFilter){
+        let elementid = prevFilter.type === 'year' ? prevFilter.value : prevFilter.value+prevFilter.type;
+        let element = document.getElementById(elementid);
+        element.style.backgroundColor =  "#85e48591";
+      }
     }
   }
